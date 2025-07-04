@@ -2,14 +2,16 @@ import { CronJob } from "cron";
 import dotenv from "dotenv";
 dotenv.config();
 
-import parseCommandLineArgs from "./src/parseCommandLineArgs";
+import { parseCommandLineArgs } from './parseCommandLineArgs';
+
 import {
   getRakutenRankingDataByGenre,
   getRakutenRankingDataByKeyword,
-} from "./src/getRakutenRankingData";
-import getGenreIdsByTime from "./src/getGenreIdsByTime";
-import getNumberToday from "./src/lib/getNumberToday";
-import postRakutenRoom from "./src/postRakutenRoom";
+} from "./getRakutenRankingData";
+
+import getGenreIdsByTime from "./getGenreIdsByTime";
+import getNumberToday from "./lib/getNumberToday";
+import postRakutenRoom from "./postRakutenRoom"; // ✅ defaultインポートに修正
 
 async function runJob() {
   const today = new Date();
@@ -21,7 +23,7 @@ async function runJob() {
   }
 
   for (const genreId of targetGenres) {
-    main(getRakutenRankingDataByGenre, genreId);
+    await main(getRakutenRankingDataByGenre, genreId);
   }
   console.log("End job:" + new Date().toLocaleString());
 }
@@ -32,12 +34,13 @@ async function main(
 ) {
   const numberToday = getNumberToday();
   const elements = await getRakutenRankingData(genreOrKeyword, numberToday);
-  await postRakutenRoom(elements);
+  await postRakutenRoom(elements); // ✅ 引数は1つ
   console.log("End job:" + new Date().toLocaleString());
 }
 
 const args = process.argv.slice(2);
 const options = parseCommandLineArgs(args);
+
 if (options.genre) {
   main(getRakutenRankingDataByGenre, options.genre);
 } else if (options.keyword) {
