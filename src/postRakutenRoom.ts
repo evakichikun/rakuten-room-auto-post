@@ -1,4 +1,4 @@
-import scrapeWebsite from "./scrapeWebsite";
+import { scrapeWebsite } from './scrapeWebsite';
 
 async function postRakutenRoom(elements: any) {
   for (const element of elements) {
