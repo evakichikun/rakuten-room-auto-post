@@ -29,7 +29,7 @@ async function runJob() {
 }
 
 async function main(
-  getRakutenRankingData: (genreOrKeyword: string, numberToday: number) => Promise<any[]>,
+  getRakutenRankingData: (genreOrKeyword: string, numberToday: number) => any,
   genreOrKeyword: string
 ) {
   const numberToday = getNumberToday();
