@@ -29,3 +29,26 @@ async function runJob() {
 }
 
 async function main(
+  getRakutenRankingData: (genreOrKeyword: string, numberToday: number) => Promise<any[]>,
+  genreOrKeyword: string
+) {
+  const numberToday = getNumberToday();
+  const elements = await getRakutenRankingData(genreOrKeyword, numberToday);
+  await postRakutenRoom(elements);
+  console.log("End job:" + new Date().toLocaleString());
+}
+
+const args = process.argv.slice(2);
+const options = parseCommandLineArgs(args);
+
+if (options.genre) {
+  main(getRakutenRankingDataByGenre, options.genre);
+} else if (options.keyword) {
+  main(getRakutenRankingDataByKeyword, options.keyword);
+} else {
+  const job = new CronJob("0 0 * * * *", () => {
+    console.log("Start job:" + new Date().toLocaleString());
+    runJob();
+  });
+  job.start();
+}
